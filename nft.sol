@@ -11,10 +11,13 @@ contract NFT is ERC721Enumerable, Ownable {
   using Strings for uint256;
 
   string public baseURI;
+
+  uint256 public cost = 110 ether; //matic 
   string public baseExtension = ".json";
-  uint256 public maxSupply = 10000;
-  uint256 public maxMintAmount = 100;
-  
+  uint256 public maxSupply = 2222;
+  uint256 public maxMintAmount = 5;
+  bool public paused = false;
+
   constructor(
     string memory _name,
     string memory _symbol,
@@ -27,13 +30,20 @@ contract NFT is ERC721Enumerable, Ownable {
   function _baseURI() internal view virtual override returns (string memory) {
     return baseURI;
   }
-
-  // only owner
-  function mint(address _to, uint256 _mintAmount) public onlyOwner {
+  
+  function mint(address _to, uint256 _mintAmount) public payable {
     uint256 supply = totalSupply();
     require(_mintAmount > 0);
-    require(_mintAmount <= maxMintAmount);
     require(supply + _mintAmount <= maxSupply);
+
+    if (msg.sender != owner()) {
+        require(!paused);
+        require(_mintAmount <= maxMintAmount);
+        require(maxMintAmount >= balanceOf(msg.sender) + _mintAmount);        
+        require(msg.value >= cost * _mintAmount);        
+        //if(whitelisted[msg.sender] != true) {
+        //}
+    }
 
     for (uint256 i = 1; i <= _mintAmount; i++) {
       _safeMint(_to, supply + i);
@@ -72,6 +82,22 @@ contract NFT is ERC721Enumerable, Ownable {
   }
 
   //only owner
+  function setCost(uint256 _newCost) public onlyOwner {
+    cost = _newCost;
+  }
+
+  function pause(bool _state) public onlyOwner {
+    paused = _state;
+  }
+
+  function whitelistUser(address _user) public onlyOwner {
+    whitelisted[_user] = true;
+  }
+
+  function removeWhitelistUser(address _user) public onlyOwner {
+    whitelisted[_user] = false;
+  }
+
   function setmaxMintAmount(uint256 _newmaxMintAmount) public onlyOwner {
     maxMintAmount = _newmaxMintAmount;
   }
