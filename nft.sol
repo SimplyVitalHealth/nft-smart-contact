@@ -2,6 +2,8 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
+//NFT contract used for Shyro NFT
+
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -26,7 +28,7 @@ contract NFT is ERC721Enumerable, Ownable {
     return baseURI;
   }
 
-  // public
+  // only owner
   function mint(address _to, uint256 _mintAmount) public onlyOwner {
     uint256 supply = totalSupply();
     require(_mintAmount > 0);
