@@ -17,6 +17,7 @@ contract NFT is ERC721Enumerable, Ownable {
   uint256 public maxSupply = 2222;
   uint256 public maxMintAmount = 5;
   bool public paused = false;
+  mapping(address => bool) public whitelisted;
 
   constructor(
     string memory _name,
