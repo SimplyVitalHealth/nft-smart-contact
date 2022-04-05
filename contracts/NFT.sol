@@ -56,7 +56,7 @@ contract NFT is ERC721Enumerable, Ownable {
     return baseURI;
   }
   
-  function mint(address _to, uint256 _mintAmount) public payable {
+  function mint(address _to, uint256 _mintAmount) public {
     uint256 supply = totalSupply();
     require(_mintAmount > 0);
     require(supply + _mintAmount <= maxSupply);
@@ -69,6 +69,15 @@ contract NFT is ERC721Enumerable, Ownable {
 
     for (uint256 i = 1; i <= _mintAmount; i++) {
       _safeMint(_to, supply + i);
+    }
+  }
+
+
+  function mintDrop(address[] calldata _to) public onlyOwner {
+    require(_to.length > 0, "Must provide at least one destination address");
+    for (uint i = 0; i < _to.length; i++) {
+      require(_to[i] == address(_to[i]),"Invalid address");
+      mint(_to[i], 1);
     }
   }
 
