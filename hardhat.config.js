@@ -17,5 +17,19 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
+  networks: {
+    hardhat: {
+    },
+    polygon: {
+      url: "https://polygon-mumbai.g.alchemy.com/v2/NMP_P2wAxnyi4oGWYKHXjRF4tbEVD1o9",
+      //accounts: ['privateKeyHere--------------------------------------------------']
+    }
+  },
   solidity: "0.8.4",
+  settings: {
+    optimizer: {
+      enabled: true,
+      runs: 200,
+    },
+  },
 };
